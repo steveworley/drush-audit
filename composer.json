@@ -1,0 +1,15 @@
+{
+  "name": "steveworley/drush-audit",
+  "description": "Perform auditing tasks against a Drupal site",
+  "authos": [
+    {
+      "name": "Steve Worley",
+      "email": "sj.worley88@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "DrushAudit\\": "src/"
+    }
+  }
+}
