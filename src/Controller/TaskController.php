@@ -9,11 +9,11 @@ class TaskController {
    */
   public static function all($options = array()) {
     $config = array(
-      'tasks' => self::getTasks(),
+      'tasks' => static::getTasks(),
       'options' => $options,
     );
 
-    self::iterate($config);
+    static::iterate($config);
   }
 
   public static function iterate(array $config = array()) {
