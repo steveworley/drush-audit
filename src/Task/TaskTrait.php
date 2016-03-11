@@ -13,6 +13,17 @@ trait TaskTrait {
 
   private $opts = array();
 
+  public $info = array();
+
+  /**
+   * Determine if this Task can run.
+   *
+   * @return bool
+   */
+  public function canRun() {
+    return TRUE;
+  }
+
   /**
    * Set any command line options.
    * @param array $options
@@ -31,14 +42,29 @@ trait TaskTrait {
   }
 
   /**
-   * {@inheritdoc}
+   * Mutator for $this->data.
    */
   public function setData($data = array()) {
     $this->data = is_array($data) ? $data : array($data);
   }
 
+  /**
+   * Accessor for $this->data.
+   */
   public function getData() {
-    return $this;
+    return $this->data;
+  }
+
+  /**
+   * Get meta information about the task.
+   *
+   * @param $info
+   *   A key for the info.
+   *
+   * @return bool|string
+   */
+  public function getInfo($info) {
+    return isset($this->info[$info]) ? $this->info[$info] : FALSE;
   }
 
   /**

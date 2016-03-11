@@ -43,4 +43,11 @@ class CustomModule implements Task {
     $this->setData($sites);
     return $this;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function canRun() {
+    return exec('which phpcs');
+  }
 }

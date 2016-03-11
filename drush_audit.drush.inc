@@ -24,8 +24,12 @@ function drush_audit_drush_command() {
     'callback' => 'drush_audit',
     'description' => dt('Perform all audits'),
     'aliases' => array('audit'),
+    'arguments' => array(
+      'tasks' => dt('Audit tasks'),
+    ),
     'examples' => array(
       'drush audit' => dt('Perform all audit tasks against the code base'),
+      'drush audit Security,Cache,VersionCheck' => dt('Perform specific audit tasks against the code base'),
     )
   );
 
@@ -122,8 +126,28 @@ function drush_audit_drush_command() {
 /**
  * Perform all audit tasks against the site.
  */
-function drush_audit() {
+function drush_audit($tasks = array()) {
   require_once __DIR__ . '/vendor/autoload.php';
+
+  $task_list = array(
+    'DrushAudit\\Task\\Cache',
+    'DrushAudit\\Task\\VersionCheck',
+    'DrushAudit\\Task\\TextFormat',
+    'DrushAudit\\Task\\CustomModule',
+    'DrushAudit\\Task\\Security',
+    'DrushAudit\\Task\\Modules',
+  );
+
+  if (!empty($tasks)) {
+    $tasks = explode(',', $tasks);
+    $task_list = array();
+
+    foreach ($tasks as $task) {
+      if (class_exists("DrushAudit\\Task\\$task")) {
+        $task_list[] = "DrushAudit\\Task\\$task";
+      }
+    }
+  }
 
   $config = array(
     'options' => array(
@@ -131,14 +155,7 @@ function drush_audit() {
       'up-to-date' => FALSE,
       'text_format' => FALSE,
     ),
-    'tasks' => array(
-      'DrushAudit\\Task\\Cache',
-      'DrushAudit\\Task\\VersionCheck',
-      'DrushAudit\\Task\\TextFormat',
-      'DrushAudit\\Task\\CustomModule',
-      'DrushAudit\\Task\\Security',
-      'DrushAudit\\Task\\Modules',
-    )
+    'tasks' => $task_list,
   );
 
   \DrushAudit\Controller\TaskController::iterate($config);
@@ -219,8 +236,7 @@ function drush_audit_theme() {
  */
 function drush_audit_security() {
   require_once __DIR__ . '/vendor/autoload.php';
-  $config = array('tasks' => array('DrushAudit\\Task\\Security'));
-  \DrushAudit\Controller\TaskController::iterate($config);
+  DrushAudit\Controller\SecurityController::all();
 }
 
 /**
