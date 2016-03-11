@@ -1,38 +1,27 @@
 <?php
+/**
+ * @file
+ * Contains DrushAudit\Task\Security\TextFormat.
+ */
 
-namespace DrushAudit\Task;
+namespace DrushAudit\Task\Security;
+
+use DrushAudit\Task\Task;
+use DrushAudit\Task\TaskTrait;
 
 class TextFormat implements Task {
 
   use TaskTrait;
 
-  /**
-   * {@inheritDoc}
-   */
-  public function execute() {
-
-    $rows = array();
-
-    foreach ($this->data as $id => $format) {
-      if (count($format->roles) == 1 && in_array('administrator', $format->roles)) {
-        continue;
-      }
-
-      $filters_html = (bool) $format->filters['filter_html']->status;
-
-      if (!$filters_html) {
-        $rows[] = array($id, implode(', ', array_values($format->roles)));
-      }
-    }
-
-    $this->outputHeader('Text formats that allow unfiltered HTML');
-    $this->outputInfo($rows, array('Filter Format', 'Roles'));
-  }
+  var $info = array(
+    'title' => 'Text format permissions',
+    'headers' => array('Filter Format', 'Roles'),
+  );
 
   /**
    * {@inheritDoc}
    */
-  public function getData() {
+  public function __construct() {
     $text_formats = filter_formats();
     $filter_info = filter_get_filters();
 
@@ -55,6 +44,27 @@ class TextFormat implements Task {
     }
 
     $this->setData($text_formats);
-    return $this;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function execute() {
+
+    $rows = array();
+
+    foreach ($this->data as $id => $format) {
+      if (count($format->roles) == 1 && in_array('administrator', $format->roles)) {
+        continue;
+      }
+
+      $filters_html = (bool) $format->filters['filter_html']->status;
+
+      if (!$filters_html) {
+        $rows[] = array($id, implode(', ', array_values($format->roles)));
+      }
+    }
+
+    return $rows;
   }
 }
