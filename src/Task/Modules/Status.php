@@ -5,16 +5,24 @@
  * Contains DrushAudit\Task\Modules.
  */
 
-namespace DrushAudit\Task;
+namespace DrushAudit\Task\Modules;
 
-class Modules implements Task {
+use DrushAudit\Task\Task;
+use DrushAudit\Task\TaskTrait;
+
+class Status implements Task {
 
   use TaskTrait;
+
+  public $info = array(
+    'title' => 'Module status',
+    'headers' => array('Module name', 'Status', 'Desired status')
+  );
 
   /**
    * {@inheritdoc}
    */
-  public function getData() {
+  public function __construct() {
     $modules = array(
       array(
         'name' => 'views_ui',
@@ -64,8 +72,6 @@ class Modules implements Task {
     );
 
     $this->setData($modules);
-
-    return $this;
   }
 
   /**
@@ -84,7 +90,6 @@ class Modules implements Task {
       }
     }
 
-    $this->outputHeader('Module checks');
-    $this->outputInfo($rows, array('Module name', 'Status', 'Desired status'), 'All modules are in the desired status.');
+    return $rows;
   }
 }

@@ -13,8 +13,6 @@ trait TaskTrait {
 
   private $opts = array();
 
-  public $info = array();
-
   /**
    * Determine if this Task can run.
    *

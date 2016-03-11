@@ -16,6 +16,7 @@ class Views implements Task {
   var $info = array(
     'title' => 'Views security task',
     'description' => '',
+    'headers' => array('View', 'Display', 'Issue'),
   );
 
   public function __construct() {
@@ -36,7 +37,7 @@ class Views implements Task {
 
       foreach ($view_info->display as $display_name => $display_info) {
         if (!empty($display_info->display_options['access']['type']) && $display_info->display_options['access']['type'] == 'none') {
-          $unsafe_views[] = "{$view_name} ({$display_name})";
+          $unsafe_views[] = array($view_name, $display_name, 'No access control found');
         }
       }
     }

@@ -2,19 +2,38 @@
 
 /**
  * @file
- * Contains DrushAudit\Task\IncompatibleMdoules;
+ * Contains DrushAudit\Task\Modules\Incompatible;
  */
 
-namespace DrushAudit\Task;
+namespace DrushAudit\Task\Modules;
 
-class IncompatibleModules implements Task {
+use DrushAudit\Task\Task;
+use DrushAudit\Task\TaskTrait;
+
+class Incompatible implements Task {
+
   use TaskTrait;
 
-  public function getData() {
+  public $info = array(
+    'title' => 'Incompatible modules',
+    'headers' => array('Module name'),
+  );
+
+  /**
+   * Generate a list of installed modules.
+   */
+  public function __construct() {
     $this->setData(module_list());
-    return $this;
   }
 
+  /**
+   * Determine if a module is incompatible.
+   *
+   * @param string $module
+   *   The module name.
+   *
+   * @return bool
+   */
   public function isIncompatible($module = '') {
     $unsupported = array(
       'apc',
@@ -67,7 +86,6 @@ class IncompatibleModules implements Task {
       }
     }
 
-    $this->outputHeader('Incompatible modules installed');
-    $this->outputInfo($rows, array('Module name'));
+    return $rows;
   }
 }

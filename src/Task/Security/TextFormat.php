@@ -15,6 +15,7 @@ class TextFormat implements Task {
 
   var $info = array(
     'title' => 'Text format permissions',
+    'headers' => array('Filter Format', 'Roles'),
   );
 
   /**

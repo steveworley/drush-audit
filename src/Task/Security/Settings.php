@@ -13,21 +13,27 @@ class Settings implements Task {
   use TaskTrait;
 
   var $info = array(
-    'title' => 'Roles security checks',
+    'title' => 'Settings security checks',
+    'headers' => array('Setting', 'Issue'),
   );
 
+  /**
+   * {@inheritdoc}
+   */
   public function execute() {
     global $conf;
 
     $results = array();
 
-    if (variable_get('error_level', 0) !== 0) {
-      $results[] = 'Error reporting is being displayed to users';
+    if (variable_get('error_level', 0) != 0) {
+      $results[] = array('Error reporting', 'Error reporting is displayed to users');
     }
 
     if (empty($conf['base_url'])) {
-      $results[] = 'Base url is not defined in settings.php';
+      $results[] = array('Configuration', '$conf[\'base_url\'] is not defined in settings');
     }
+
+    return $results;
   }
 
 

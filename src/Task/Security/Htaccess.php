@@ -15,8 +15,9 @@ use DrushAudit\Task\TaskTrait;
 class Htaccess implements  Task{
   use TaskTrait;
 
-  var $info = array(
+  public $info = array(
     'title' => 'Htaccess checks',
+    'headers' => array('File', 'Issue'),
   );
 
   /**
@@ -25,7 +26,7 @@ class Htaccess implements  Task{
   public function __construct() {
     // Use FS over PHP for this as it may need to search deep.
     $htaccess = array();
-    exec('localte .htaccess', $htaccess);
+    exec('locate .htaccess', $htaccess);
 
     $htaccess = array_filter($htaccess, function($item) {
       return strpos($item, DRUPAL_ROOT) !== FALSE;
@@ -36,5 +37,6 @@ class Htaccess implements  Task{
 
   public function execute() {
     // TODO: Implement execute() method.
+    return array();
   }
 }

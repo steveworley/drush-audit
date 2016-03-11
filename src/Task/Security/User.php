@@ -13,10 +13,17 @@ class User implements Task {
 
   use TaskTrait;
 
+  public $info = array(
+    'title' => 'User account checks',
+    'headers' => array('UID', 'Issue'),
+  );
+
   /**
    * {@inheritdoc}
    */
   public function execute() {
+    $output = array();
+
     $root_user_check = db_select('users', 'u')
       ->fields('u', array('uid', 'status'))
       ->condition('uid', 1, '=')
@@ -24,7 +31,9 @@ class User implements Task {
       ->fetchAssoc();
 
     if ($root_user_check['status'] != 0) {
-      return array(dt('User with ID1 is not blocked'));
+      $output[] = array(1, 'User with ID is not blocked');
     }
+
+    return $output;
   }
 }

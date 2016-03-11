@@ -16,6 +16,7 @@ class Roles implements Task {
   var $info = array(
     'title' => 'Role permissions',
     'description' => 'Determine if generic user roles have access to edit content',
+    'headers' => array('Role', 'Permission', 'Module'),
   );
 
   /**
@@ -30,17 +31,33 @@ class Roles implements Task {
       $unauthenticated_role->rid => $unauthenticated_role,
     );
 
-    $this->setData(array(
-      'roles' => $roles,
-      'permissions' => user_permission_get_modules(),
-    ));
+    $this->setData($roles);
   }
 
   /**
    * {@inheritdoc}
    */
   public function execute() {
-    // TODO: Implement execute() method.
+    $output = array();
+    $permissions = array(
+      'edit_any%',
+      'delete_any%',
+    );
+
+    foreach ($this->getData() as $rid => $role) {
+      foreach ($permissions as $permission) {
+        $result = db_query('select module, permission from role_permissions where rid = :rid and permission like :perm', array(
+          ':rid' => $rid,
+          ':perm' => $permission,
+        ));
+
+        foreach ($result as $row) {
+          $output[] = array($role->name, $row->permission, $row->module);
+        }
+      }
+    }
+
+    return $output;
   }
 
 }
