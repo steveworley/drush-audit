@@ -18,9 +18,11 @@ class SecurityController extends TaskController {
       'htaccess' => 'DrushAudit\\Task\\Security\\Htaccess',
       'roles' => 'DrushAudit\\Task\\Security\\Roles',
       'settings' => 'DrushAudit\\Task\\Security\\Settings',
-      'textformats' => 'DrushAudit\\Task\\Security\\TextFormat',
+      'text-formats' => 'DrushAudit\\Task\\Security\\TextFormat',
       'user' => 'DrushAudit\\Task\\Security\\User',
       'views' => 'DrushAudit\\Task\\Security\\Views',
+      'php-filter' => 'DrushAudit\\Task\\Security\\PhpFilter',
+      'ds-field' => 'DrushAudit\\Task\\Security\\DSField',
     );
 
     if (isset($tasks[$task])) {
