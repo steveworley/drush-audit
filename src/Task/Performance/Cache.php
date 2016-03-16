@@ -14,7 +14,7 @@ class Cache implements Task {
 
   use TaskTrait;
 
-  public $info = array(
+  var $info = array(
     'title' => 'Cache settings',
     'headers' => array('Cache Setting', 'Issue'),
   );
@@ -23,8 +23,8 @@ class Cache implements Task {
    * {@inheritdoc}
    */
   public function execute() {
-
     $rows = array();
+    
     if (!variable_get('cache')) {
       $rows[] = array('Page', 'Cache is disabled');
     }
@@ -40,6 +40,8 @@ class Cache implements Task {
     if (variable_get('page_cache_maximum_age') >= 3600) {
       $rows[] = array('Cache max age', 'Maximum page cache lifetime is greater than one hour consider revising');
     }
+
+    return $rows;
   }
 
 }

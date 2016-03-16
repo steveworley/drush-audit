@@ -15,7 +15,7 @@ class Settings implements Task {
   use TaskTrait;
 
   var $info = array(
-    'tilte' => 'Settings performance checks',
+    'title' => 'Settings performance checks',
     'headers' => array('Setting', 'Issue'),
   );
 
