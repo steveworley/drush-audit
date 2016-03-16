@@ -15,8 +15,8 @@ class Modules implements Task {
   use TaskTrait;
 
   var $info = array(
-    'name' => 'Underperforming modules',
-    'headers' => array('Module' => 'Info'),
+    'title' => 'Underperforming modules',
+    'headers' => array('Module', 'Info'),
   );
 
   public function __construct() {

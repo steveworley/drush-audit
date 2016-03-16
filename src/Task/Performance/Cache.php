@@ -24,7 +24,7 @@ class Cache implements Task {
    */
   public function execute() {
     $rows = array();
-    
+
     if (!variable_get('cache')) {
       $rows[] = array('Page', 'Cache is disabled');
     }
