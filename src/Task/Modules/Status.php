@@ -69,14 +69,23 @@ class Status implements Task {
         'friendly_name' => 'PHP filter',
         'desired_status' => FALSE,
       ),
+      array(
+        'name' => 'field_ui',
+        'friendly_name' => 'Field UI',
+        'desired_status' => FALSE,
+      ),
+      array(
+        'name' => 'update',
+        'friendly_name' => 'Update Manager',
+        'desired_status' => FALSE,
+      ),
     );
 
     $this->setData($modules);
   }
 
   /**
-   * The entry method into a Task.
-   * @return mixed
+   * {@inheritdoc}
    */
   public function execute() {
     $rows = array();
