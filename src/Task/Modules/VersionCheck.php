@@ -14,45 +14,100 @@ class VersionCheck implements Task {
 
   use TaskTrait;
 
+  const UPDATE_DEFAULT_URL = 'http://updates.drupal.org/release-history';
+
   public $info = array(
     'title' => 'Version check for installed modules',
-    'headers' => array('Module name', 'Installed', 'Recommended'),
+    'headers' => array('Module name', 'Installed', 'Recommended', 'Type'),
   );
 
   /**
    * {@inheritdoc}
    */
   public function __construct() {
-    $module_list = module_list();
-    $this->setData($module_list);
+    $this->setData($this->getProjects());
     return $this;
+  }
+
+  /**
+   * Get all projects for the current Drupal site.
+   *
+   * @return array
+   *   A list of projects with latest version to compare.
+   */
+  private function getProjects() {
+    $module_data = array_filter(system_rebuild_module_data(), function($file) {
+      return $file->status != 0;
+    });
+
+    foreach ($module_data as $project) {
+      // @TODO: this is {x} HTTP requests and can be slow will need to optimise.
+      $project->latest = $this->fetchProjectLatestRelease($project);
+    }
+
+    return $module_data;
+  }
+
+  /**
+   * Fetch the project status from Drupal.org
+   *
+   * @param array $project
+   *   An module list array.
+   *
+   * @return object
+   */
+  private function fetchProjectLatestRelease($project) {
+    // @TODO: Look for project specific url.
+    // @see _update_get_fetch_url_base.
+    $url = self::UPDATE_DEFAULT_URL;
+    $url .= "/{$project->name}/" . DRUPAL_CORE_COMPATIBILITY;
+    $xml = drupal_http_request($url);
+
+    if (isset($xml->error)) {
+      return FALSE;
+    }
+
+    $xml = simplexml_load_string($xml->data);
+    $data = json_decode(json_encode($xml), TRUE);
+
+    return isset($data['releases']['release']) ? reset($data['releases']['release']) : FALSE;
   }
 
   /**
    * {@inheritdoc}
    */
   public function execute() {
-    $available = update_get_available();
-    $updates = update_calculate_project_data($available);
+    $projects = self::getProjects();
+    $return = array();
 
-    $requires_update = array();
-
-    foreach ($this->data as $module) {
-      if (empty($updates[$module])) {
+    foreach ($this->data as $module => $project) {
+      if (empty($project->latest['version']) || version_compare($project->info['version'], $project->latest['version']) >= 0) {
+        // The version is at least the latest so we can skip this project or the
+        // version is not present this is generally a custom module one that
+        // doesn't have release history on DO so we can skip.
         continue;
       }
 
-      $row = array(
-        $module,
-        $updates[$module]['existing_version'],
-        $updates[$module]['recommended'],
-      );
+      $terms = [];
 
-      if (version_compare($updates[$module]['existing_version'], $updates[$module]['recommended'])) {
-        $requires_update[] = $row;
+      if (isset($project->latest['terms'])) {
+        if (isset($project->latest['terms']['term']['value'])) {
+          $terms[] = $project->latest['terms']['term']['value'];
+        } else {
+          foreach ($project->latest['terms']['term'] as $term) {
+            $terms[] = $term['value'];
+          }
+        }
       }
+
+      $return[] = array(
+        $module,
+        $project->info['version'],
+        $project->latest['version'],
+        implode(', ', $terms),
+      );
     }
 
-    return $requires_update;
+    return $return;
   }
 }
