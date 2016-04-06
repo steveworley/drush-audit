@@ -79,6 +79,11 @@ class Status implements Task {
         'friendly_name' => 'Update Manager',
         'desired_status' => FALSE,
       ),
+      array(
+        'name' => 'paranoia',
+        'friendly_name' => 'Paranoia',
+        'desired_status' => TRUE,
+      )
     );
 
     $this->setData($modules);
