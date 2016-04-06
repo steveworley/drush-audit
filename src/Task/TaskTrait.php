@@ -54,15 +54,30 @@ trait TaskTrait {
   }
 
   /**
+   * Verify that this task has enough information to run.
+   *
+   * This can be used to verify that a task can execute. If this returns
+   * FALSE the task will not execute and an error will be printed.
+   *
+   * @return bool
+   *   If the task has enough information to execute.
+   */
+  public function verify() {
+    return TRUE;
+  }
+
+  /**
    * Get meta information about the task.
    *
    * @param $info
    *   A key for the info.
+   * @param $default
+   *   A default message to display.
    *
    * @return bool|string
    */
-  public function getInfo($info) {
-    return isset($this->info[$info]) ? $this->info[$info] : FALSE;
+  public function getInfo($info, $default = FALSE) {
+    return isset($this->info[$info]) ? $this->info[$info] : $default;
   }
 
   /**
