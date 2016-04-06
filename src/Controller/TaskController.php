@@ -29,6 +29,11 @@ class TaskController {
       $task = new $task($config['options']);
       drush_print('> Collecting information for ' . $task->getInfo('title'));
 
+      if (!$task->verify()) {
+        drush_print('  ' . $task->getInfo('invalid', 'Unable to gather information for ' . $task->getInfo('title')));
+        continue;
+      }
+
       $output[] = array(
         'title' => $task->getInfo('title'),
         'headers' => $task->getInfo('headers'),
