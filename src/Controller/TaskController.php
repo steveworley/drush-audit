@@ -49,10 +49,11 @@ class TaskController {
    */
   public static function render($output, $options) {
     foreach ($output as $task => $result) {
-      $result = $result + array('title' => 'Task', 'headers' => array(), 'body' => array());
+      $result = $result + array('title' => FALSE, 'headers' => array(), 'body' => array());
 
-      $title_hyph = str_repeat('-', strlen($result['title']));
-      drush_log("\n> {$result['title']}\n", 'ok');
+      if (!empty($result['title'])) {
+        drush_log("\n> {$result['title']}\n", 'ok');
+      }
 
       if (count($result['body']) < 1) {
         drush_log("No results for {$result['title']}", 'warn');

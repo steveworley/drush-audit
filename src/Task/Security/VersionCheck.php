@@ -5,7 +5,7 @@
  * Check installed version of a module against
  */
 
-namespace DrushAudit\Task\Modules;
+namespace DrushAudit\Task\Security;
 
 use DrushAudit\Task\Task;
 use DrushAudit\Task\TaskTrait;
