@@ -34,7 +34,7 @@ class Modules implements Task {
 
     foreach ($this->getData() as $module) {
       if (in_array($module, array_keys($exclude))) {
-        $output = array($module, $exclude[$module]);
+        $output[] = array($module, $exclude[$module]);
       }
     }
 

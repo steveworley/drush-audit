@@ -32,11 +32,11 @@ class Settings implements Task {
     }
 
     if (variable_get('preprocess_css') != 1) {
-      $results = array('preprocess_css', 'CSS is not aggregated');
+      $results[] = array('preprocess_css', 'CSS is not aggregated');
     }
 
     if (variable_get('preprocess_js') != 1) {
-      $results = array('preprocess_js', 'JS is not aggregated');
+      $results[] = array('preprocess_js', 'JS is not aggregated');
     }
 
     return $results;
