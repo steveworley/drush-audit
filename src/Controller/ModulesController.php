@@ -33,50 +33,38 @@ class ModulesController extends TaskController {
 
   public static function iterate(array $config = array()) {
     $config = $config + array('tasks' => array(), 'options' => array());
-
-    drush_print("\n> Performing module checks\n");
+    $output = array();
 
     foreach ($config['tasks'] as $task) {
       $module = new $task($config['options']);
-      $row = array('name' => $module->getInfo('name'));
-      $printed = FALSE;
+      $module_name = $module->getInfo('name');
 
-      if (!$module->validateStatus()) {
-        drush_print(dt(' !module should be !status', array(
-          '!module' => $module->getInfo('name'),
-          '!status' => $module->getInfo('status') ? 'enabled' : 'disabled',
-        )));
-        $printed = TRUE;
-      }
+      $output[$module_name] = array();
+      $output[$module_name]['status'] = array($module->getStatus());
 
       if ($module->getInfo('configuration', FALSE)) {
-        if (!$printed) {
-          drush_print(dt(" !module", array(
-            '!module' => $module->getInfo('name'),
-          )));
-          $printed = TRUE;
-        }
+        $output[$module_name]['config'] = $module->getConfig();
+      }
+    }
 
-        drush_print(" Checking configuration\n ---");
-        $config = $module->validateConfig();
-        $table = array(
-          'title' => FALSE,
-          'headers' => array('Configuration', 'Expected', 'Actual'),
-          'body' => array(),
-        );
+    static::render($output, $config['options']);
+  }
 
-        foreach ($config as $key => $values) {
-          $table['body'][] = array('configuration' => $key) + $values;
-        }
+  public static function render($output, $options) {
+    foreach ($output as $module => $info) {
+      drush_print("> $module");
 
-        if (!empty($table['body'])) {
-          drush_print_table($table['body']);
-        }
+      $headers = array(array('Actual', 'Expected'));
+      drush_print("\n Module status:");
+      drush_print_table(array_merge($headers, $info['status']));
+
+      if (!empty($info['config'])) {
+        drush_print("\n Module configuration: ");
+        $headers = array(array('Setting', 'Expected', 'Actual'));
+        drush_print_table(array_merge($headers, $info['config']));
       }
 
-      if ($printed) {
-        drush_print("------");
-      }
+      drush_print();
     }
   }
 }

@@ -28,38 +28,26 @@ abstract class Module {
    * Returns the expected status of the module.
    * @return boolean
    */
-  public function status() {
-    return $this->getInfo('status', TRUE);
-  }
-
-  /**
-   * Get the current status of the module.
-   * @return bool
-   */
-  public function validateStatus() {
-    return $this->status() === module_exists($this->getInfo('machine_name'));
-  }
-
-  /**
-   * Get the expected module configuration.
-   * @return array
-   */
-  public function config() {
-    return $this->getInfo('configuration', array());
+  public function getStatus() {
+    return array(
+      'actual' => module_exists($this->getInfo('machine_name')) ? 'enabled' : 'disabled',
+      'expected' => $this->getInfo('status') ? 'enabled' : 'disabled',
+    );
   }
 
   /**
    * Validate the configuration against what is set in the DB.
    * @return array
    */
-  public function validateConfig() {
-    $config = $this->config();
+  public function getConfig() {
+    $config = $this->getInfo('configuration', array());
     $return = array();
 
     foreach ($config as $key => $value) {
       $stored_config = variable_get($key);
       if ($value !== $stored_config) {
-        $return[$key] = array(
+        $return[] = array(
+          'setting' => $key,
           'expected' => $value,
           'actual' => $stored_config,
         );
