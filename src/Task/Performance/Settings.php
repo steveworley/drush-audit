@@ -20,6 +20,15 @@ class Settings implements Task {
   );
 
   /**
+   * Attempt to determine if the site needs to run updates.
+   */
+  public function getUpdateStatus() {
+    require_once DRUPAL_ROOT . '/includes/update.inc';
+    require_once DRUPAL_ROOT . '/includes/install.inc';
+    return update_get_update_list();
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function execute() {
@@ -32,11 +41,15 @@ class Settings implements Task {
     }
 
     if (variable_get('preprocess_css') != 1) {
-      $results = array('preprocess_css', 'CSS is not aggregated');
+      $results[] = array('preprocess_css', 'CSS is not aggregated');
     }
 
     if (variable_get('preprocess_js') != 1) {
-      $results = array('preprocess_js', 'JS is not aggregated');
+      $results[] = array('preprocess_js', 'JS is not aggregated');
+    }
+
+    if (!empty($this->getUpdateStatus())) {
+      $results[] = array('updates', 'Updates need to be run');
     }
 
     return $results;
