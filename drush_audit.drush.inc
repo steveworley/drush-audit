@@ -73,6 +73,15 @@ function drush_audit_drush_command() {
     ),
   );
 
+  $items['drush-audit-govcms'] = array(
+    'callback' => 'drush_audit_govcms',
+    'description' => dt('Audit govCMS project'),
+    'aliases' => array('audit-govcms'),
+    'examples' => array(
+      'drush audit-govcms' => dt('Perform tasks that should be completed prior to a govCMS site launch')
+    ),
+  );
+
   return $items;
 }
 
@@ -124,4 +133,12 @@ function drush_audit_security() {
 function drush_audit_modules() {
   require_once __DIR__ . '/vendor/autoload.php';
   \DrushAudit\Controller\ModulesController::all();
+}
+
+/**
+ * Perform a govCMS prelaunch
+ */
+function drush_audit_govcms() {
+  require_once __DIR__ . '/vendor/autoload.php';
+  \DrushAudit\Controller\GovCMSController::all();
 }
