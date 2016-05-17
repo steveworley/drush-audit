@@ -12,7 +12,10 @@ class GovCMSController extends TaskController {
    * {@inheritdoc}
    */
   public static function getTasks($task = FALSE) {
-    $tasks = array();
+    $tasks = array(
+      'administrators' => 'DrushAudit\\Task\\GovCMS\\Administrators',
+    );
+
     return $task && isset($tasks[$task]) ? array($tasks[$task]) : $tasks;
   }
 
