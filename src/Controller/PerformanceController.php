@@ -12,6 +12,7 @@ class PerformanceController extends TaskController {
       'cache' => 'DrushAudit\\Task\\Performance\\Cache',
       'settings' => 'DrushAudit\\Task\\Performance\\Settings',
       'modules' => 'DrushAudit\\Task\\Performance\\Modules',
+      'views' => 'DrushAudit\\Task\\Performance\\Views',
     );
 
     if (isset($tasks[$task])) {
