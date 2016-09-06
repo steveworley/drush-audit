@@ -46,7 +46,7 @@ class Roles implements Task {
 
     foreach ($this->getData() as $rid => $role) {
       foreach ($permissions as $permission) {
-        $result = db_query('select module, permission from role_permissions where rid = :rid and permission like :perm', array(
+        $result = db_query('select module, permission from role_permission where rid = :rid and permission like :perm', array(
           ':rid' => $rid,
           ':perm' => $permission,
         ));

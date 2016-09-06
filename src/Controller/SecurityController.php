@@ -22,6 +22,7 @@ class SecurityController extends TaskController {
       'user' => 'DrushAudit\\Task\\Security\\User',
       'views' => 'DrushAudit\\Task\\Security\\Views',
       'headers' => 'DrushAudit\\Task\\Security\\Headers',
+      'version' => 'DrushAudit\\Task\\Security\\VersionCheck',
     );
 
     if (isset($tasks[$task])) {
