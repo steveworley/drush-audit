@@ -21,6 +21,7 @@ class SecurityController extends TaskController {
       'textformats' => 'DrushAudit\\Task\\Security\\TextFormat',
       'user' => 'DrushAudit\\Task\\Security\\User',
       'views' => 'DrushAudit\\Task\\Security\\Views',
+      'headers' => 'DrushAudit\\Task\\Security\\Headers',
       'version' => 'DrushAudit\\Task\\Security\\VersionCheck',
     );
 
