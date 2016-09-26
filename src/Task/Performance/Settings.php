@@ -52,6 +52,10 @@ class Settings implements Task {
       $results[] = array('updates', 'Updates need to be run');
     }
 
+    if (variable_get('error_level') != 0) {
+      $results[] = ['error_level', 'Errors are being displayed'];
+    }
+
     return $results;
   }
 }
