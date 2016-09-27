@@ -7,8 +7,9 @@
 
 namespace DrushAudit\Controller;
 
+use DrushAudit\Controller\TaskControllerInterface;
 
-class SecurityController extends TaskController {
+class SecurityController extends TaskControllerInterface {
 
   /**
    * {@inheritdoc}

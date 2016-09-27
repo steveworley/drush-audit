@@ -6,7 +6,7 @@
 
 namespace DrushAudit\Controller;
 
-class PerformanceController extends TaskController {
+class PerformanceController extends TaskControllerInterface {
   public function getTasks($task = FALSE) {
     $tasks = array(
       'cache' => 'DrushAudit\\Task\\Performance\\Cache',

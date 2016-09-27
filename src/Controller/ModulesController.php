@@ -7,7 +7,7 @@
 
 namespace DrushAudit\Controller;
 
-class ModulesController extends TaskController {
+class ModulesController extends TaskControllerInterface {
 
   public static function getTasks($task = FALSE) {
     $tasks = array(

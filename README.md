@@ -29,6 +29,18 @@ Performs all registered securiy audit tasks against the current site.
 
 For more information on commands you can always run `drush help`
 
+### Specifying output type
+
+Drush audit can output directly to the CLI or generate a HTML artifact which can be viewed; this is controlled with the `output` option.
+
+```
+drush audit-security --output=html
+```
+
+- `--output, --o`: Define the output type possible values `html` or `cli`.
+- `--output_dir, --dir`: Define the output location
+- `--file, -f`: Define the file name
+
 ## Whats included?
 
 Out of the box, the following audits are included:
