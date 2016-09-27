@@ -11,5 +11,8 @@
     "psr-4": {
       "DrushAudit\\": "src/"
     }
+  },
+  "require": {
+    "twig/twig": "~1.0"
   }
 }

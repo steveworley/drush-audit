@@ -6,7 +6,7 @@
 
 namespace DrushAudit\Controller;
 
-class GovCMSController extends TaskController {
+class GovCMSController extends TaskControllerInterface {
 
   /**
    * {@inheritdoc}
