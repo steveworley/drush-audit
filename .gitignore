@@ -1,2 +1,4 @@
 # Ignore vendor.
 vendor/
+*.html
+composer.lock

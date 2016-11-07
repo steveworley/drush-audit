@@ -25,24 +25,7 @@
             <div id="collapse-{{ loop.index }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-{{ loop.index }}">
               <div class="panel-body">
                 {% if row.body %}
-                  <table class="table">
-                    <thead>
-                      <tr>
-                        {% for header in row.headers %}
-                          <th>{{ header }}</th>
-                        {% endfor %}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {% for body in row.body %}
-                        <tr>
-                          {% for item in body %}
-                            <td>{{ item }}</td>
-                          {% endfor %}
-                        </tr>
-                      {% endfor %}
-                    </tbody>
-                  </table>
+                  {{ _self.table(row.headers, row.body) }}
                 {% else %}
                   <p>No issues found.</p>
                 {% endif %}
@@ -56,3 +39,30 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
   </body>
 </html>
+
+{%  macro table(headers, rows, class) %}
+  <table class="{{ class|default('table') }}">
+    <thead>
+      <tr>
+        {% for header in headers %}
+          <th>{{ header }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+        <tr>
+          {% for item in row %}
+            <td>
+              {% if item is iterable %}
+                {{ _self.table(item|first|keys, item, class) }}
+              {% else %}
+                {{ item }}
+              {% endif %}
+            </td>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endmacro %}

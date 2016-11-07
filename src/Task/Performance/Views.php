@@ -15,7 +15,8 @@ class Views implements Task {
 
   var $info = array(
     'title' => 'Views',
-    'headers' => array(),
+    'headers' => ['View Id', 'Data'],
+//    'headers' => array('View Name', 'Display ID', 'Caching', 'Pagination'),
   );
 
   /**
@@ -30,30 +31,33 @@ class Views implements Task {
    */
   public function execute() {
     $num = 30; // @TODO: Make this configurable.
+    $output = [];
 
     foreach ($this->getData() as $id => $view) {
-      $indent = "  ";
-      drush_print("$indent>> Checking view: $id");
+      $rows = [];
 
       foreach ($view->display as $display_id => $display) {
-        $indent = "    ";
-        drush_print("$indent>>> $display_id");
-        $indent = "$indent   ";
+        $row = [];
 
         if ($display->display_options['cache']['type'] == 'none') {
-          drush_print("$indent- view is not being cached");
+          $row['cache'] = $display->display_options['cache']['type'];
         }
 
         if ($display->display_options['pager']['options']['items_per_page'] > $num) {
-          drush_print("$indent- view is displaying more than $num items.");
+          $row['pagination'] = $display->display_options['pager']['options']['items_per_page'];
         }
 
+        if (count($row) > 1) {
+          $rows[] = array_merge(['display_id' => $display_id], $row);
+        }
       }
 
-      drush_print();
+      if (!empty($rows)) {
+        $output[] = [$id, $rows];
+      }
     }
 
-    return array();
+    return $output;
   }
 
 }

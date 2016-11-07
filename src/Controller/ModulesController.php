@@ -31,40 +31,26 @@ class ModulesController extends TaskControllerInterface {
     return array_values($tasks);
   }
 
-  public static function iterate(array $config = array()) {
+  public function iterate(array $config = array()) {
     $config = $config + array('tasks' => array(), 'options' => array());
-    $output = array();
+    $output[] = array(
+      'title' => 'Modules',
+      'headers' => ['Name', 'Status', 'Desired Status', 'Configuration'],
+      'body' => [],
+    );
 
     foreach ($config['tasks'] as $task) {
       $module = new $task($config['options']);
-      $module_name = $module->getInfo('name');
+      extract($module->getStatus());
 
-      $output[$module_name] = array();
-      $output[$module_name]['status'] = array($module->getStatus());
-
-      if ($module->getInfo('configuration', FALSE)) {
-        $output[$module_name]['config'] = $module->getConfig();
-      }
+      $output[0]['body'][] = [
+        $module->getInfo('name'),
+        $actual,
+        $expected,
+        $module->getConfig(),
+      ];
     }
 
-    static::render($output, $config['options']);
-  }
-
-  public static function render($output, $options) {
-    foreach ($output as $module => $info) {
-      drush_print("> $module");
-
-      $headers = array(array('Actual', 'Expected'));
-      drush_print("\n Module status:");
-      drush_print_table(array_merge($headers, $info['status']));
-
-      if (!empty($info['config'])) {
-        drush_print("\n Module configuration: ");
-        $headers = array(array('Setting', 'Expected', 'Actual'));
-        drush_print_table(array_merge($headers, $info['config']));
-      }
-
-      drush_print();
-    }
+    $this->render($output, $config['options']);
   }
 }
